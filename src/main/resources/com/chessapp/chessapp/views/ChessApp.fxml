@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -21,20 +23,25 @@
          <children>
             <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="SOMETIMES">
               <tabs>
-                <Tab text="1 CONTRE 1">
+                <Tab text="JEU ">
                      <content>
                         <fx:include fx:id="newGame" source="NewGameTab.fxml" />
                      </content>
                 </Tab>
-                <Tab text="HISTORIQUE">
+                <Tab text="JOUEURS">
                      <content>
-                         <fx:include fx:id="historyTab" source="HistoryTab.fxml" />
+                         <fx:include fx:id="historyTab" source="PlayerTable.fxml" />
                      </content>
                 </Tab>
-                  <Tab text="JOUEURS">
+                  <Tab text="PARTIES">
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                      </content>
+                  </Tab>
+                  <Tab text="TOURNOI">
+                    <content>
+                        <fx:include fx:id="tournamentTab" source="TournamentTab.fxml"/>
+                    </content>
                   </Tab>
               </tabs>
             </TabPane>
@@ -59,10 +66,10 @@
 
                        </ImageView>
 
-                       <Label id="labelPlayer" fx:id="labelPlayerOne" text="JOUEUR NOIR" translateX="5.0" translateY="5.0" />
+                       <Label id="labelPlayer" fx:id="labelPlayerTwo" text="JOUEUR NOIR" translateX="5.0" translateY="5.0" />
                      <VBox alignment="CENTER" prefHeight="20.0" prefWidth="70.0" style="-fx-background-color: #656461;" translateX="400.0">
                         <children>
-                           <Label id="timePlayerOne" fx:id="timePlayerTwo" text="10:00" textFill="WHITE">
+                           <Label id="timePlayerOne" fx:id="labelTimerPlyTwo" text="10:00" textFill="WHITE">
                               <font>
                                  <Font size="16.0" />
                               </font>
@@ -107,11 +114,11 @@
 
                  </ImageView>
 
-               <Label id="labelPlayer" fx:id="labelPlayerTwo" text="JOUEUR BLANC" textFill="WHITE" translateX="5.0" translateY="5.0" />
+               <Label id="labelPlayer" fx:id="labelPlayerOne" text="JOUEUR BLANC" textFill="WHITE" translateX="5.0" translateY="5.0" />
                <VBox alignment="CENTER" prefHeight="20.0" prefWidth="70.0" style="-fx-background-color: #989795;" translateX="400.0">
                   <children>
       
-                       <Label id="timePlayerOne" fx:id="timePlayerOne" text="10:00">
+                       <Label id="timePlayerOne" fx:id="labelTimerPlyOne" text="10:00">
                         <font>
                            <Font size="16.0" />
                         </font>

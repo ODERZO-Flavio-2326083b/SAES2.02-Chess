@@ -1,8 +1,8 @@
 package com.chessapp.chessapp;
 
 import com.chessapp.chessapp.model.*;
+import com.chessapp.chessapp.model.chessPiece.*;
 import javafx.application.Platform;
-import javafx.util.Pair;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

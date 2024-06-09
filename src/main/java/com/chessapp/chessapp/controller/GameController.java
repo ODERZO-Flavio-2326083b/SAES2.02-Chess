@@ -1,14 +1,15 @@
 package com.chessapp.chessapp.controller;
 
 import com.chessapp.chessapp.model.*;
-import javafx.animation.PauseTransition;
+import com.chessapp.chessapp.model.chessPiece.*;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,8 +22,8 @@ import java.util.Random;
  */
 public class GameController {
 
-    private static final String squareOneColor = "#739552";
-    private static final String squareTwoColor = "#EBECD0";
+    private static final String squareOneColor = "#EBECD0";
+    private static final String squareTwoColor = "#739552";
     private static final String canMoveSquareColor = "#EB7D6A";
     private static final String clickedSquareColor = "#F5F682";
 
@@ -31,9 +32,13 @@ public class GameController {
     @FXML
     private Label labelPlayerTwo;
     @FXML
+    private Label labelTimerPlyOne, labelTimerPlyTwo;
+    @FXML
     private GridPane grid;
     @FXML
-    private NewGameController newGameController;
+    private NewGameController newGameController; // le fxml place le controlleur lors de l'importation du fichier fxml NewGameTab.fxml
+    @FXML
+    private TournamentController tournamentTabController; // pareil
 
     private Piece movingPiece;
     private StackPane[][] cases;
@@ -42,6 +47,7 @@ public class GameController {
     private StackPane firstClickedPane;
 
     private boolean playingAgainstBot;
+    private boolean tournamentGame;
     private boolean gameRunning;
     private int sourceX;
     private int sourceY;
@@ -52,6 +58,9 @@ public class GameController {
     private King whiteKing;
     private King blackKing;
 
+    private IntegerProperty timeLeftPlyOne;
+    private IntegerProperty timeLeftPlyTwo;
+
 
     /**
      * Initialisation de la matrice de stackPanes, du plateau de jeu, et des events pour chaque case
@@ -59,7 +68,21 @@ public class GameController {
     @FXML
     public void initialize() {
         newGameController.setGameController(this);
+        tournamentTabController.setGameController(this);
 
+        try {
+            initBoard();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * initialise l'échiéquier pour le jeu
+     * @throws Exception
+     */
+    public void initBoard() throws Exception {
         cases = new StackPane[8][8];
         plateau = new Plateau();
         clickNumber = 0;
@@ -67,29 +90,13 @@ public class GameController {
 
         whitePieces = new ArrayList<>();
         blackPieces = new ArrayList<>();
-    }
-
-    /**
-     * Fonction appellée quand le bouton de lancement est cliqué
-     * @param playerOneName Nom du joueur 1
-     * @param playerTwoName Nom du joueur 2
-     */
-    public void startGame(String playerOneName, String playerTwoName, boolean playingAgainstBot) throws Exception {
-        System.out.println("start game called in GameController");
-
-        plateau.clearPlateau();
-        this.playingAgainstBot = playingAgainstBot;
-        labelPlayerOne.setText(playerOneName);
-        labelPlayerTwo.setText(playerTwoName);
-        gameRunning = true;
-
         for (int j = 0; j < 8; ++j) {
             for (int i = 0; i < 8; i++) {
 
                 StackPane stackPane = new StackPane();
 
                 String squareColor = ((i + j) % 2 == 0) ? squareOneColor : squareTwoColor;
-                stackPane.setStyle("-fx-background-color: " + squareColor + "; -fx-border-color: black");
+                stackPane.setStyle("-fx-background-color: " + squareColor + ";");
 
                 Piece piece = getPiece(j, i);
 
@@ -120,6 +127,37 @@ public class GameController {
     }
 
     /**
+     * Fonction appellée quand le bouton de lancement est cliqué
+     * @param playerOneName Nom du joueur 1
+     * @param playerTwoName Nom du joueur 2
+     */
+    public void startGame(String playerOneName, String playerTwoName, boolean playingAgainstBot, int timePerTurn) throws Exception {
+        initBoard();
+
+        this.playingAgainstBot = playingAgainstBot;
+        labelPlayerOne.setText(playerOneName);
+        labelPlayerTwo.setText(playerTwoName);
+        gameRunning = true;
+        tournamentGame = false;
+
+        timeLeftPlyOne = new SimpleIntegerProperty(timePerTurn * 60);
+        timeLeftPlyTwo = new SimpleIntegerProperty(timePerTurn * 60); ;
+    }
+
+    public void startTournamentGame(String playerOneName, String playerTwoName, int timePerTurn) throws Exception {
+        initBoard();
+
+        this.playingAgainstBot = false;
+        labelPlayerOne.setText(playerOneName);
+        labelPlayerTwo.setText(playerTwoName);
+        gameRunning = true;
+        tournamentGame = true;
+
+        timeLeftPlyOne = new SimpleIntegerProperty(timePerTurn * 60);
+        timeLeftPlyTwo = new SimpleIntegerProperty(timePerTurn * 60);
+    }
+
+    /**
      * Donne la pièce correspondante à une case donnée au début de la partie
      * @param x coordonnée X
      * @param y coordonnée Y
@@ -139,8 +177,8 @@ public class GameController {
                 case 0, 7 -> new Rook(x, y, color);
                 case 1, 6 -> new Knight(x, y, color);
                 case 2, 5 -> new Bishop(x, y, color);
-                case 3 -> (color == 1) ? new Queen(x, y, color) : new King(x, y, color);
-                case 4 -> (color == 1) ? new King(x, y, color) : new Queen(x, y, color);
+                case 3 -> new Queen(x, y, color);
+                case 4 -> new King(x, y, color);
                 default -> piece;
             };
         }
@@ -154,6 +192,8 @@ public class GameController {
      * @param stackPane Le stackpane concerné
      */
     public void onMouseClicked(Event e, StackPane stackPane) throws IOException {
+
+        if (!gameRunning) return;
 
         List<Tuple> availableMoves;
         King currentKing, enemyKing;
@@ -176,13 +216,13 @@ public class GameController {
                 if (!movingPiece.equals(currentKing)) return;
 
                 if(!currentKing.canPieceMove(plateau)) {
-                    endGame(currentTurnColor * -1);
+                    endGame(currentTurnColor);
                     return;
                 }
             }
 
             if (movingPiece.getColor() == currentTurnColor) {
-                stackPane.setStyle("-fx-background-color: " + clickedSquareColor + "; -fx-border-color: black");
+                stackPane.setStyle("-fx-background-color: " + clickedSquareColor + ";");
                 firstClickedPane = stackPane;
                 clickNumber = 1;
                 sourceX = GridPane.getColumnIndex((Node) e.getSource());
@@ -214,19 +254,20 @@ public class GameController {
 
                 stackPane.getChildren().setAll(movingPiece); // mouvement de la pièce visuellement
 
-                if(plateau.getPiece(destX, destY) != null) {
-                    if (plateau.getPiece(destX, destY).equals(enemyKing)) {
-                        endGame(-1);
-                    } else {
-                        enemyTeam.remove(plateau.getPiece(destX, destY));
-                    }
-                }
+                Piece targetedPiece = plateau.getPiece(destX, destY);
 
                 try {
                     plateau.movement(sourceX, sourceY, destX, destY);
                     // plateau.showGrid();
                 } catch (Exception ex) {
                     throw new RuntimeException(ex);
+                }
+
+                if(targetedPiece != null) {
+                    if (targetedPiece.equals(enemyKing)) {
+                        endGame(currentTurnColor);
+                        return;
+                    } else enemyTeam.remove(targetedPiece);
                 }
 
                 currentTurnColor = currentTurnColor * -1;
@@ -237,7 +278,7 @@ public class GameController {
 
             // dans tous les cas on remet les couleurs comme avant
             String sourceColor = ((sourceX + sourceY) % 2 == 0) ? squareOneColor : squareTwoColor;
-            firstClickedPane.setStyle("-fx-background-color: " + sourceColor + "; -fx-border-color: black");
+            firstClickedPane.setStyle("-fx-background-color: " + sourceColor + ";");
 
             firstClickedPane = null;
             stopShowingAvailableMoves(availableMoves);
@@ -281,7 +322,7 @@ public class GameController {
         for (Tuple coords : availableMoves) {
             x = (int) coords.getFirst();
             y = (int) coords.getSecond();
-            cases[x][y].setStyle("-fx-background-color: " + canMoveSquareColor + "; -fx-border-color: black");
+            cases[x][y].setStyle("-fx-background-color: " + canMoveSquareColor + ";");
         }
     }
 
@@ -296,7 +337,7 @@ public class GameController {
             x = (int) coords.getFirst();
             y = (int) coords.getSecond();
             color = ((x + y) % 2 == 0) ? squareOneColor : squareTwoColor;
-            cases[x][y].setStyle("-fx-background-color: " + color + "; -fx-border-color: black");
+            cases[x][y].setStyle("-fx-background-color: " + color + ";");
         }
     }
 
@@ -363,8 +404,13 @@ public class GameController {
                 sp.setOnMouseClicked(null);
             }
         }
-        newGameController.gameEnded(winner);
-        gameRunning = false;
+
+        if (tournamentGame) {
+            tournamentTabController.matchEnded(winner);
+        } else {
+            newGameController.gameEnded(winner);
+            gameRunning = false;
+        }
     }
 
 }

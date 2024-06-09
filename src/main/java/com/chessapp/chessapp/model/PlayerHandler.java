@@ -19,7 +19,7 @@ public class PlayerHandler {
      * @param pseudo nom du joueur
      * @throws IOException en cas d'erreur lors de la création ou de l'écriture dans le fichier
      */
-    public void verficationJoueur(String pseudo) throws IOException {
+    public static void verficationJoueur(String pseudo) throws IOException {
         String filePath = directoryPath + "/" + pseudo + ".csv";
 
         // Vérifier si le répertoire existe, sinon le créer
@@ -56,7 +56,7 @@ public class PlayerHandler {
      * @param perdant nom du joueur perdant
      * @throws IOException en cas d'erreur lors de la lecture ou de l'écriture dans le fichier
      */
-    public void finPartie(String gagnant, String perdant) throws IOException {
+    public static void finPartie(String gagnant, String perdant) throws IOException {
         modifierStats(gagnant, 1, 1,  0);
         modifierStats(perdant, 1, 0,  1);
     }
@@ -69,24 +69,24 @@ public class PlayerHandler {
      * @param nbDefaites  défaites à ajouter
      * @throws IOException si erreur lors de la lecture ou de l'écriture dans le fichier
      */
-    private void modifierStats(String pseudo, int nbParties, int nbVictoires, int nbDefaites) throws IOException {
-        String filePath = directoryPath + "/" + pseudo + ".csv";
-        String[] stats = lireStats(filePath);
+    public static void modifierStats(String pseudo, int nbParties, int nbVictoires, int nbDefaites) throws IOException {
+        String[] stats = lireStats(pseudo);
         if (stats != null) {
             stats[1] = Integer.toString(Integer.parseInt(stats[1]) + nbParties);
             stats[2] = Integer.toString(Integer.parseInt(stats[2]) + nbVictoires);
             stats[3] = Integer.toString(Integer.parseInt(stats[3]) + nbDefaites);
-            ecrireStats(filePath, stats);
+            ecrireStats(pseudo, stats);
         }
     }
 
     /**
      * lit les statistiques d'un joueur et les renvoie
-     * @param filePath chemin du fichier
+     * @param pseudo nom du joueur
      * @return les statistiques dans une liste de String
      * @throws IOException si erreur de lecture
      */
-    private String[] lireStats(String filePath) throws IOException {
+    public static String[] lireStats(String pseudo) throws IOException {
+        String filePath = directoryPath + "/" + pseudo + ".csv";
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             reader.readLine(); // sauter la première ligne
             String line = reader.readLine();
@@ -100,27 +100,40 @@ public class PlayerHandler {
 
     /**
      * permet de modifier les statistiques d'un fichier joueur
-     * @param filePath chemin du fichier
+     * @param pseudo nom du joueur
      * @param stats statistiques de remplacement
      * @throws IOException si erreur de lecture
      */
-    private void ecrireStats(String filePath, String[] stats) throws IOException {
+    private static void ecrireStats(String pseudo, String[] stats) throws IOException {
+        String filePath = directoryPath + "/" + pseudo + ".csv";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            writer.write("\"pseudo\",nb_parties,nb_victoires,nb_defaite\n");
+            writer.write("pseudo,nb_parties,nb_victoires,nb_defaite\n");
             writer.write(String.join(",", stats) + "\n");
         }
     }
 
-    public static void main(String[] args) {
-        PlayerHandler ph = new PlayerHandler();
-        try {
-            ph.verficationJoueur("joueur1");
-            ph.verficationJoueur("joueur2");
+    public static Player[] obtenirJoueurs() throws Exception {
+        File directory = new File(directoryPath);
+        String[] playerFiles = directory.list();
+        Player[] allPlayers = new Player[playerFiles.length];
 
-            ph.finPartie("joueur1", "joueur2");
-            ph.finPartie("joueur1", "joueur2");
+        for (int i = 0; i < allPlayers.length; i++) {
+            allPlayers[i] = new Player(playerFiles[i].substring(0, playerFiles[i].indexOf(".csv")));
+        }
+
+        return allPlayers;
+    }
+
+    public static void main(String[] args) {
+        try {
+            verficationJoueur("joueur1");
+            verficationJoueur("joueur2");
+
+            finPartie("joueur1", "joueur2");
+            finPartie("joueur1", "joueur2");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 }

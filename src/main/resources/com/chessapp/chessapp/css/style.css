@@ -8,7 +8,7 @@ ids personnalisés
 */
 
 #gameVbox {
-    -fx-background-color: grey;
+    -fx-background-color: #21201D;
 }
 
 #playText {
@@ -20,13 +20,18 @@ ids personnalisés
     -fx-text-fill: white;
     -fx-font-weight: 900;
     -fx-font-size: 25px;
-    -fx-background-color: lightgreen;
+    -fx-background-color: red;
     -fx-padding: 10 20 10 20;
     -fx-effect: dropshadow(gaussian, #3ea83e, 10, 0, 0, 1);
 }
 
+#playerNameTextfield{
+    -fx-font-style: italic;
+    -fx-font-weight: 100;
+}
+
 #playButton:hover {
-    -fx-background-color: #9cec9c;
+    -fx-effect: dropshadow(gaussian, #3ea83e, 20, 0, 0, 1);
 }
 
 #importPlayerButton {
@@ -60,11 +65,90 @@ ids personnalisés
     -fx-text-fill: white;
 }
 
+#vboxDetailedStats {
+    -fx-text-fill: white;
+    -fx-background-color: #302E2B;
+}
+
+#detailedStatsName {
+    -fx-text-fill: white;
+    -fx-font-size: 40px;
+    -fx-font-weight: 800;
+}
+
+#detailedGameNumber {
+    -fx-font-family: "Montserrat";
+    -fx-text-fill: white;
+    -fx-font-size: 30px;
+    -fx-font-weight: 700;
+}
+
+#detailedWinCount {
+    -fx-text-fill: #8ab554;
+    -fx-font-size: 22px;
+}
+
+#detailedLoseCount {
+    -fx-text-fill: #d3402c;
+    -fx-font-size: 22px;
+}
+
+#detailedPercentageWin {
+    -fx-text-fill: #8ab554;
+    -fx-font-size: 18px;
+}
+
+#detailedPercentageLose {
+    -fx-text-fill: #d3402c;
+    -fx-font-size: 18px;
+}
+
+
+.progress-bar {
+    -fx-accent: #8ab554;
+}
+
+.progress-bar > .track {
+    -fx-text-box-border: #d3402c;
+    -fx-control-inner-background: #d3402c;
+    -fx-background-color: #d3402c;
+}
+
+.progress-bar .bar {
+    -fx-background-insets: 0;
+    -fx-padding: 5px;
+}
+
+.table-view {
+    -fx-background-color: #302E2B;
+    -fx-text-background-color: white;
+    -fx-font-family: "Montserrat 100";
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #595853;
+    -fx-text-background-color: #8ab554;
+}
+.table-row-cell:odd{
+    -fx-background-color: #302E2B;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em;
+}
+.table-row-cell:even{
+    -fx-background-color: #3c3a37;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em;
+}
+
+.table-view .column-header {
+    -fx-background-color: #595853;
+}
+
 .tab:selected {
-    -fx-background-color: #262522;
+    -fx-background-color: #302E2B;
 }
 .tab-pane {
-    -fx-background-color: #262522;
+    -fx-background-color: #302E2B;
 }
 
 *.tab-header-area {

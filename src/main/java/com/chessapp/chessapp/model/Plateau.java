@@ -1,5 +1,7 @@
 package com.chessapp.chessapp.model;
 
+import com.chessapp.chessapp.model.chessPiece.Piece;
+
 /**
  * La matrice 8x8 de jeu où la partie se déroule.
  */
@@ -23,7 +25,7 @@ public class Plateau {
      */
     public void movement(int oldX, int oldY, int newX, int newY) throws Exception {
         if(plateau[oldY][oldX] == null) {
-            throw new Exception("ERREUR Plateau.movement() : case source vide");
+            throw new Exception(String.format("ERREUR Plateau.movement() : case source X:%d, Y:%d vide", oldX, oldY));
         }
 
         plateau[newY][newX] = plateau[oldY][oldX];
@@ -87,6 +89,10 @@ public class Plateau {
      */
     public void setGrid(Piece[][] newPlateau) {
         this.plateau = newPlateau;
+    }
+
+    public Piece[][] getGrid() {
+        return plateau;
     }
 
     public void clearPlateau() {

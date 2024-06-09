@@ -1,5 +1,7 @@
-package com.chessapp.chessapp.model;
+package com.chessapp.chessapp.model.chessPiece;
 
+import com.chessapp.chessapp.model.Plateau;
+import com.chessapp.chessapp.model.Tuple;
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;

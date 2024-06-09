@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 public class HistoriqueHandler {
     /**
      * Methode qui prend en paramtre 2 coordonnes et qui va creer ou modifier un fichier csv
-     * en ajoutant a chaque lignes le x et y des 2  coordonnes
+     * en ajoutant a chaque lignes le x et y des 2 coordonnes
      * @param fileName
      * @param sourceCoords
      * @param destCoords
@@ -50,7 +50,6 @@ public class HistoriqueHandler {
 
     /**
      * Methode qui va prendre en parametre le nom d'un fichier et va lire ligne par ligne
-     * puis va ...(je te laisse finir)
      * @param file
      * @throws IOException
      */
@@ -73,9 +72,6 @@ public class HistoriqueHandler {
                 int newy = Integer.parseInt(values[3]);
 
                 System.out.println("oldx: " + oldx + ", oldy: " + oldy + ", newx: " + newx + ", newy: " + newy);
-
-
-
             }
         } catch ( IOException e) {
             e.printStackTrace();
