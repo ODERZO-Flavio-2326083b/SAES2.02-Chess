@@ -55,7 +55,7 @@
                         </HBox>
                     </children>
                 </VBox>
-                <Button fx:id="importPlayerOneButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#importPlayerOne" prefHeight="35.0" prefWidth="180.0" style="-fx-background-color: #3c3b39;" text="Importer le joueur 1" textFill="WHITE" />
+                <Button id="importPlayerButton" fx:id="importPlayerOneButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#importPlayerOne" prefHeight="35.0" prefWidth="180.0" style="-fx-background-color: #3c3b39;" text="Importer le joueur 1" textFill="WHITE" />
 
                 <!-- Player 2 Section -->
                 <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="79.0" prefWidth="300.0" spacing="10.0" style="-fx-background-color: #3c3b39; -fx-background-radius: 10; -fx-border-radius: 10;">
@@ -80,7 +80,7 @@
                         </HBox>
                     </children>
                 </VBox>
-                <Button fx:id="importPlayerTwoButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#importPlayerTwo" prefHeight="35.0" prefWidth="180.0" style="-fx-background-color: #3c3b39;" text="Importer le joueur 2" textFill="WHITE" />
+                <Button id="importPlayerButton" fx:id="importPlayerTwoButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#importPlayerTwo" prefHeight="35.0" prefWidth="180.0" style="-fx-background-color: #3c3b39;" text="Importer le joueur 2" textFill="WHITE" />
             <CheckBox fx:id="botCheckbox" mnemonicParsing="false" text="Jouer contre un bot" textFill="WHITE" />
             <VBox alignment="CENTER" spacing="20.0">
                <children>
@@ -91,7 +91,7 @@
                   </Label>
       
                       <!-- Play Button -->
-                      <Button id="playButton" fx:id="playButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#startGame" prefHeight="50.0" prefWidth="250.0" style="-fx-background-color: #80b54b;" text="Jouer" textFill="WHITE">
+                      <Button id="playButton" fx:id="playButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#startGame" prefHeight="50.0" prefWidth="250.0" text="Jouer" textFill="WHITE">
                           <font>
                               <Font name="Inter Semi Bold" size="20.0" />
                           </font>

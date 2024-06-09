@@ -26,4 +26,8 @@ public class Match {
         return plyTwo;
     }
 
+    @Override
+    public String toString() {
+        return "Match [plyOne=" + plyOne + ", plyTwo=" + plyTwo + "]";
+    }
 }

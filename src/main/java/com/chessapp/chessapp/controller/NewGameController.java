@@ -31,6 +31,7 @@ public class NewGameController {
     private CheckBox botCheckbox;
 
     private String playerOneName, playerTwoName;
+    private BooleanProperty tournamentRunning;
     private BooleanProperty gameRunning;
     private BooleanProperty playerOneImported;
     private BooleanProperty playerTwoImported;
@@ -53,6 +54,7 @@ public class NewGameController {
         gameController.startGame(playerOneName, playerTwoName, playingAgainstBot.get(), 10);
         infoLabel.setText("Partie commencée, bonne chance !");
     }
+
 
     @FXML
     public void importPlayerOne() {
@@ -93,6 +95,7 @@ public class NewGameController {
         playerOneImported = new SimpleBooleanProperty(false);
         playerTwoImported = new SimpleBooleanProperty(false);
         playingAgainstBot = new SimpleBooleanProperty(false);
+        tournamentRunning = new SimpleBooleanProperty(false);
 
         BooleanBinding isTextfieldPlyOneAvailable = new BooleanBinding() {
             {

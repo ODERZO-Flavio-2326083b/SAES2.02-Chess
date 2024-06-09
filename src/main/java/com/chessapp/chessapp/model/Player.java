@@ -15,7 +15,11 @@ public class Player {
 
     public Player(String name) throws Exception {
         this.name = name;
+        if (name == "SKIP") { // si jamais c'est un joueur juste pour remplir une case d'un nombre de joueurs impairs dans un tournoi
+            return;
+        }
         String[] stats = PlayerHandler.lireStats(name);
+
         if (stats != null) {
             this.gamesPlayed = Integer.parseInt(stats[1]);
             this.wins = Integer.parseInt(stats[2]);
@@ -51,5 +55,10 @@ public class Player {
 
     public double getWinRate() {
         return winRate;
+    }
+
+    @Override
+    public String toString() {
+        return "Player [name=" + name + "]";
     }
 }

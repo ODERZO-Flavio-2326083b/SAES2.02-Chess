@@ -69,6 +69,7 @@ public class GameController {
     public void initialize() {
         newGameController.setGameController(this);
         tournamentTabController.setGameController(this);
+        tournamentTabController.setNewGameController(newGameController);
 
         try {
             initBoard();
