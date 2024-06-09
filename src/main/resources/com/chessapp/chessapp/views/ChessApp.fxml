@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -30,17 +27,17 @@
                 </Tab>
                 <Tab text="JOUEURS">
                      <content>
-                         <fx:include fx:id="historyTab" source="PlayerTable.fxml" />
+                         <fx:include fx:id="playerTab" source="PlayerTable.fxml" />
                      </content>
                 </Tab>
                   <Tab text="PARTIES">
                      <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                         <fx:include fx:id="historyTab" source="HistoryTab.fxml" />
                      </content>
                   </Tab>
                   <Tab text="TOURNOI">
                     <content>
-                        <fx:include fx:id="tournamentTab" source="TournamentTab.fxml"/>
+                        <fx:include fx:id="tournamentTab" source="TournamentTab.fxml" />
                     </content>
                   </Tab>
               </tabs>
@@ -69,12 +66,18 @@
                        <Label id="labelPlayer" fx:id="labelPlayerTwo" text="JOUEUR NOIR" translateX="5.0" translateY="5.0" />
                      <VBox alignment="CENTER" prefHeight="20.0" prefWidth="70.0" style="-fx-background-color: #656461;" translateX="400.0">
                         <children>
-                           <Label id="timePlayerOne" fx:id="labelTimerPlyTwo" text="10:00" textFill="WHITE">
+                           <Label id="gameTimer" fx:id="labelTimerPlyTwo" text="10:00" textFill="WHITE">
                               <font>
                                  <Font size="16.0" />
                               </font>
                            </Label>
                         </children>
+                        <HBox.margin>
+                           <Insets />
+                        </HBox.margin>
+                        <padding>
+                           <Insets left="20.0" />
+                        </padding>
                      </VBox>
 
                    </HBox>
@@ -118,10 +121,13 @@
                <VBox alignment="CENTER" prefHeight="20.0" prefWidth="70.0" style="-fx-background-color: #989795;" translateX="400.0">
                   <children>
       
-                       <Label id="timePlayerOne" fx:id="labelTimerPlyOne" text="10:00">
+                       <Label id="gameTimer" fx:id="labelTimerPlyOne" text="10:00">
                         <font>
                            <Font size="16.0" />
                         </font>
+                        <padding>
+                           <Insets left="20.0" />
+                        </padding>
                      </Label>
                   </children>
                </VBox>

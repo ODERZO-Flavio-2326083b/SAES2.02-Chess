@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * Classe chargée de la lecture et écriture des fichiers utilisateurs
+ */
 public class PlayerHandler {
 
     static String directoryPath = "Data/Players";
@@ -112,13 +115,18 @@ public class PlayerHandler {
         }
     }
 
+    /**
+     * renvoie la liste de tous les fichiers joueurs existants
+     * @return liste d'objet joueurs
+     * @throws Exception si erreur de lecture
+     */
     public static Player[] obtenirJoueurs() throws Exception {
         File directory = new File(directoryPath);
         String[] playerFiles = directory.list();
         Player[] allPlayers = new Player[playerFiles.length];
 
         for (int i = 0; i < allPlayers.length; i++) {
-            allPlayers[i] = new Player(playerFiles[i].substring(0, playerFiles[i].indexOf(".csv")));
+            allPlayers[i] = new Player(playerFiles[i].substring(0, playerFiles[i].indexOf(".csv"))); // supprime le .csv dans le nom du fichier
         }
 
         return allPlayers;

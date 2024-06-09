@@ -14,6 +14,9 @@ import javafx.scene.layout.VBox;
 
 import javax.security.auth.callback.Callback;
 
+/**
+ * Controleur qui gère l'affichage du tableView des joueurs et de leur statistiques
+ */
 public class PlayerTableController {
 
     @FXML
@@ -35,6 +38,10 @@ public class PlayerTableController {
         vboxDetailedStats.setVisible(false);
     }
 
+    /**
+     * Initialise les colonnes et leur propriétés de la tableView
+     * @throws Exception
+     */
     public void statsInit() throws Exception {
 
 
@@ -56,6 +63,9 @@ public class PlayerTableController {
 
     }
 
+    /**
+     * initialise les events lors du double-clic sur une entrée de la table
+     */
     private void setEvents() {
         tableViewPlayer.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2 && tableViewPlayer.getSelectionModel().getSelectedItem() != null) {
@@ -69,6 +79,10 @@ public class PlayerTableController {
         });
     }
 
+    /**
+     * actualise les labels de chaque statistiques sur un joueur dans l'écran de statistiques détaillées
+     * @param player le joueur en question
+     */
     private void showPlayerDetails(Player player) {
         detailedLoseCount.setText(player.getLosses() + " défaites");
         detailedWinCount.setText(player.getWins() + " victoires");
@@ -82,6 +96,9 @@ public class PlayerTableController {
         vboxDetailedStats.setVisible(true);
     }
 
+    /**
+     * arrête l'affichage de l'écran de statistiques détaillées
+     */
     private void stopShowingPlayerDetails() {
         vboxDetailedStats.setVisible(false);
         vboxTableView.setVisible(true);

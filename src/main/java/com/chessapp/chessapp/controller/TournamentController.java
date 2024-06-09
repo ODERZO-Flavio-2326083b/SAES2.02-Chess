@@ -2,6 +2,8 @@ package com.chessapp.chessapp.controller;
 
 import com.chessapp.chessapp.model.Match;
 import com.chessapp.chessapp.model.Player;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,6 +13,9 @@ import javafx.scene.control.TextField;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controleur des tournois, gère leur initialisation et leur déroulé
+ */
 public class TournamentController {
 
     @FXML
@@ -21,9 +26,13 @@ public class TournamentController {
     private Label tournamentInfoLabel;
     @FXML
     private TextField tournamentPlayersTextField;
+    @FXML
+    private Button tournamentStartButton;
 
     private GameController gameController;
+    private NewGameController newGameController;
 
+    private BooleanProperty tournamentRunning;
     private List<Player> allPlayers;
     private List<Player> nextRoundPlayers;
     private List<Match> allMatches;
@@ -31,9 +40,20 @@ public class TournamentController {
 
     @FXML
     private void initialize() {
-        tournamentInfoLabel.setText("Merci de rentrer tous les joueurs du tournoi au dessus, séparés par des virgules.");
+        tournamentInfoLabel.setText("Merci de taper tous les noms de joueurs participants au dessus, séparés par des virgules.");
+        tournamentCurrentMatch.setText("");
+        tournamentCurrentRound.setText("");
+        tournamentRunning = new SimpleBooleanProperty(false);
+        createBindings();
     }
 
+    /**
+     * crée les bindings pour le bon fonctionnement de l'ihm
+     */
+    private void createBindings() {
+        tournamentStartButton.disableProperty().bind(tournamentRunning);
+        tournamentPlayersTextField.editableProperty().bind(tournamentRunning.not());
+    }
 
     /**
      * démarre le tournoi
@@ -41,7 +61,9 @@ public class TournamentController {
      * de plus, les joueurs qui n'ont pas de fichier .csv seront ignorés
      */
     @FXML
-    public void beginTournament() {
+    public void beginTournament() throws Exception {
+        tournamentRunning.set(true);
+        newGameController.setTournamentRunning(true);
         allPlayers = new ArrayList<>();
         allMatches = new ArrayList<>();
         nextRoundPlayers = new ArrayList<>();
@@ -51,9 +73,8 @@ public class TournamentController {
         // elle prend le texte entré par l'utilisateur,
         // retire tous les espaces,
         // et utilise les virgules pour former une liste de noms de joueurs
-        System.out.println(tournamentPlayersTextField.getText());
         List<String> allPlayerNames = List.of(tournamentPlayersTextField.getText().replaceAll("\\s", "").split(","));
-        System.out.println(allPlayerNames);
+
         for (String playerName : allPlayerNames) {
             try {
                 allPlayers.add(new Player(playerName));
@@ -69,24 +90,31 @@ public class TournamentController {
         playCurrentMatch();
     }
 
-
     /**
      * affiche le match actuel à l'écran, ou le grand gagnant si la liste des joueurs est de taille 1
      */
     public void playCurrentMatch() {
         if(matchNumber >= allMatches.size()) {
-            if (allPlayers.size() == 1)
+            if (allPlayers.size() == 1) {
                 tournamentCurrentMatch.setText("Grand gagnant : " + allPlayers.get(0).getName());
-            else {
+                tournamentRunning.set(false);
+                newGameController.setTournamentRunning(false);
+            } else {
                 nextRound();
             }
         } else {
             Match currentMatch = allMatches.get(matchNumber);
             tournamentCurrentMatch.setText(String.format("%s VS %s", currentMatch.getPlyOne().getName(), currentMatch.getPlyTwo().getName()));
-            try {
-                gameController.startTournamentGame(currentMatch.getPlyOne().getName(), currentMatch.getPlyTwo().getName(), 10);
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (currentMatch.getPlyOne().getName().equals("SKIP"))
+                matchEnded(-1);
+            else if (currentMatch.getPlyTwo().getName().equals("SKIP"))
+                matchEnded(1);
+            else {
+                try {
+                    gameController.startTournamentGame(currentMatch.getPlyOne().getName(), currentMatch.getPlyTwo().getName(), 60);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -95,18 +123,18 @@ public class TournamentController {
      * génère tous les objets Matchs du tournoi
      * si le nombre de joueurs est impair, le dernier joueur de la liste passe au prochain tour automatiquement
      */
-    public void generateMatches() {
+    public void generateMatches() throws Exception {
         allMatches.clear();
         if (allPlayers.size() == 1) {
             return;
+        } else {
+            if (allPlayers.size() % 2 == 1) {
+                allPlayers.add(new Player("SKIP"));
+            }
+            for (int i = 0; i < allPlayers.size(); i += 2) {
+                allMatches.add(new Match(allPlayers.get(i), allPlayers.get(i + 1)));
+            }
         }
-        if (allPlayers.size() % 2 == 1) {
-            nextRoundPlayers.add(allPlayers.get(allPlayers.size() - 1));
-        }
-        for (int i = 0; i < allPlayers.size(); i += 2) {
-            allMatches.add(new Match(allPlayers.get(i), allPlayers.get(i + 1)));
-        }
-        System.out.println(allMatches);
     }
 
     /**
@@ -118,20 +146,30 @@ public class TournamentController {
             Match currentMatch = allMatches.get(matchNumber);
             if (winner == 1) {
                 nextRoundPlayers.add(currentMatch.getPlyOne());
+                tournamentInfoLabel.setText(String.format("Le gagnant de ce match est %s !", currentMatch.getPlyOne().getName()));
             } else if (winner == -1) {
                 nextRoundPlayers.add(currentMatch.getPlyTwo());
+                tournamentInfoLabel.setText(String.format("Le gagnant de ce match est %s !", currentMatch.getPlyTwo().getName()));
             }
         }
         ++matchNumber;
         playCurrentMatch();
     }
 
+    /**
+     * joue le prochain tour, en changeant l'affichage et en regénérant les matchs
+     */
     public void nextRound() {
         ++roundNumber;
         tournamentCurrentRound.setText("ROUND " + roundNumber);
         matchNumber = 0;
         allPlayers = nextRoundPlayers;
-        generateMatches();
+        nextRoundPlayers = new ArrayList<>();
+        try {
+            generateMatches();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         playCurrentMatch();
     }
 
@@ -141,5 +179,13 @@ public class TournamentController {
 
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
+    }
+
+    public void setNewGameController(NewGameController newGameController) {
+        this.newGameController = newGameController;
+    }
+
+    public NewGameController getNewGameController() {
+        return newGameController;
     }
 }

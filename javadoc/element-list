@@ -1,0 +1,5 @@
+module:com.chessapp.chessapp
+com.chessapp.chessapp
+com.chessapp.chessapp.controller
+com.chessapp.chessapp.model
+com.chessapp.chessapp.model.chessPiece

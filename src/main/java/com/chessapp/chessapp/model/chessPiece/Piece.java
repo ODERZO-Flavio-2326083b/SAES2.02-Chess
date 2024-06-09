@@ -40,34 +40,6 @@ public abstract class Piece extends ImageView {
         super.setPreserveRatio(true);
     }
 
-    public String getPieceType() {
-        return pieceType;
-    }
-
-    public int getColor() {
-        return color;
-    }
-
-    public int getxTab() {
-        return xTab;
-    }
-
-    public int getyTab() {
-        return yTab;
-    }
-    public Tuple getCoords() {
-        return new Tuple(xTab, yTab);
-    }
-
-    public void setxTab(int xTab) {
-        this.xTab = xTab;
-    }
-
-    public void setyTab(int yTab) {
-        this.yTab = yTab;
-    }
-
-
     /**
      * Calcule tous les mouvements possible de la pièce
      * @param plateau plateau sur lequel donner les mouvements possibles
@@ -111,8 +83,40 @@ public abstract class Piece extends ImageView {
         return false;
     }
 
+    /**
+     * renvoie true ou false selon si la pièce peut bouger
+     * @param plateau plateau de jeu
+     * @return
+     */
     public boolean canPieceMove(Plateau plateau) {
         return !this.calculateMovements(plateau).isEmpty();
+    }
+
+    public String getPieceType() {
+        return pieceType;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public int getxTab() {
+        return xTab;
+    }
+
+    public int getyTab() {
+        return yTab;
+    }
+    public Tuple getCoords() {
+        return new Tuple(xTab, yTab);
+    }
+
+    public void setxTab(int xTab) {
+        this.xTab = xTab;
+    }
+
+    public void setyTab(int yTab) {
+        this.yTab = yTab;
     }
 
 }
