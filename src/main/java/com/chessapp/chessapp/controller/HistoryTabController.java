@@ -12,7 +12,6 @@ import javafx.scene.layout.VBox;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,19 +42,20 @@ public class HistoryTabController {
 
     @FXML
     private void initialize() {
+        vboxTableView.setVisible(true);
+        vboxMovesView.setVisible(false);
         setupTable();
         loadHistories();
         setEvents();
-        vboxTableView.setVisible(true);
-        vboxMovesView.setVisible(false);
+
     }
 
     private void setupTable() {
-        pseudo1Column.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPseudo1()));
-        pseudo2Column.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPseudo2()));
-        dateColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDate()));
+        pseudo1Column.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().pseudo1()));
+        pseudo2Column.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().pseudo2()));
+        dateColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().date()));
 
-        moveColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMove()));
+        moveColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().move()));
     }
 
     private void loadHistories() {
@@ -75,13 +75,6 @@ public class HistoryTabController {
         tableViewHistory.setItems(historyEntries);
     }
 
-    /**
-     * Classe simple utilisée pour l'implémentation des données des parties dans l'historique
-     * @param pseudo1 pseudo du gagnant
-     * @param pseudo2 pseudo du perdant
-     * @param date date de la partie
-     */
-    public record HistoryEntry(String pseudo1, String pseudo2, String date) {
     private void loadGame(String fileName) {
         moves = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader("Data/Historique/" + fileName))) {
@@ -116,7 +109,7 @@ public class HistoryTabController {
             if (e.getClickCount() == 2 && tableViewHistory.getSelectionModel().getSelectedItem() != null) {
                 HistoryEntry selectedEntry = tableViewHistory.getSelectionModel().getSelectedItem();
                 if (selectedEntry != null) {
-                    loadGame(selectedEntry.getFileName());
+                    loadGame(selectedEntry.fileName());
                     displayMoves();
                     vboxTableView.setVisible(false);
                     vboxMovesView.setVisible(true);
@@ -124,9 +117,7 @@ public class HistoryTabController {
             }
         });
 
-        vboxMovesView.setOnMouseClicked(e -> {
-            stopShowingMoves();
-        });
+        tableViewMoves.setOnMouseClicked(e -> stopShowingMoves());
     }
 
     private void stopShowingMoves() {
@@ -134,45 +125,9 @@ public class HistoryTabController {
         vboxTableView.setVisible(true);
     }
 
-    public static class HistoryEntry {
-        private final String pseudo1;
-        private final String pseudo2;
-        private final String date;
-        private final String fileName;
-
-        public HistoryEntry(String pseudo1, String pseudo2, String date, String fileName) {
-            this.pseudo1 = pseudo1;
-            this.pseudo2 = pseudo2;
-            this.date = date;
-            this.fileName = fileName;
-        }
-
-        public String getPseudo1() {
-            return pseudo1;
-        }
-
-        public String getPseudo2() {
-            return pseudo2;
-        }
-
-        public String getDate() {
-            return date;
-        }
-
-        public String getFileName() {
-            return fileName;
-        }
+    public record HistoryEntry(String pseudo1, String pseudo2, String date, String fileName) {
     }
 
-    public static class MoveEntry {
-        private final String move;
-
-        public MoveEntry(String move) {
-            this.move = move;
-        }
-
-        public String getMove() {
-            return move;
-        }
+    public record MoveEntry(String move) {
     }
 }
