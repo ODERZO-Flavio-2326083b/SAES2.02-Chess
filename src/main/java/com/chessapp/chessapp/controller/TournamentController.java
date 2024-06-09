@@ -102,11 +102,11 @@ public class TournamentController {
         }
         if (allPlayers.size() % 2 == 1) {
             nextRoundPlayers.add(allPlayers.get(allPlayers.size() - 1));
-            allPlayers.remove(allPlayers.get(allPlayers.size() - 1));
         }
         for (int i = 0; i < allPlayers.size(); i += 2) {
             allMatches.add(new Match(allPlayers.get(i), allPlayers.get(i + 1)));
         }
+        System.out.println(allMatches);
     }
 
     /**
