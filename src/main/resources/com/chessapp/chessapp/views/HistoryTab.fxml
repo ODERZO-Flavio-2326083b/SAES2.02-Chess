@@ -7,13 +7,25 @@
 
 <AnchorPane prefHeight="600.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/20" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chessapp.chessapp.controller.HistoryTabController">
     <children>
-        <VBox>
+        <VBox fx:id="vboxTableView">
             <children>
-                <TableView fx:id="tableViewHistory" prefHeight="600.0" prefWidth="350.0">
+                <TableView fx:id="tableViewHistory" prefHeight="300.0" prefWidth="350.0">
                     <columns>
                         <TableColumn fx:id="pseudo1Column" prefWidth="116.66666666666667" text="Gagnant" />
                         <TableColumn fx:id="pseudo2Column" prefWidth="116.66666666666667" text="Perdant" />
                         <TableColumn fx:id="dateColumn" prefWidth="116.66666666666667" text="Date" />
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                </TableView>
+            </children>
+        </VBox>
+        <VBox fx:id="vboxMovesView" visible="false">
+            <children>
+                <TableView fx:id="tableViewMoves" prefHeight="600.0" prefWidth="350.0">
+                    <columns>
+                        <TableColumn fx:id="moveColumn" prefWidth="350.0" text="Mouvements" />
                     </columns>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
