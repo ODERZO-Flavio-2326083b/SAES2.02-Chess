@@ -31,8 +31,6 @@ public class NewGameController {
     @FXML
     private Label timeLabel;
     @FXML
-    private Label timeErrorLabel;
-    @FXML
     private TextField timeTextField;
     @FXML
     private Label infoLabel;
@@ -95,14 +93,11 @@ public class NewGameController {
     @FXML
     private void onTimeImageClick() {
         String newTime = timeTextField.getText();
-        if (isValidTimeFormat(newTime)) {
+        if (isValidTimeFormat(newTime) && parseTime(newTime) >= 10) {
             gameTime = parseTime(newTime);
             timeLabel.setText(newTime);
-            timeErrorLabel.setVisible(false);
-            infoLabel.setText("");
         } else {
-            timeErrorLabel.setVisible(true);
-            infoLabel.setText("Format de temps invalide. Utilisez mm:ss");
+            infoLabel.setText("Format de temps invalide. Utilisez mm:ss avec minimum 10 secondes");
         }
     }
 
