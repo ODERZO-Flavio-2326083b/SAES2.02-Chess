@@ -24,6 +24,8 @@ public class GameController {
 
     private static final String squareOneColor = "#EBECD0";
     private static final String squareTwoColor = "#739552";
+    private static final String squareOneRedColor = "#EB7D6A";
+    private static final String squareTwoRedColor = "#D36C50";
     private static final String canMoveSquareColor = "#EB7D6A";
     private static final String clickedSquareColor = "#F5F682";
 
@@ -320,10 +322,12 @@ public class GameController {
      */
     public void showAvailableMoves(List<Tuple> availableMoves) {
         int x, y;
+        String color;
         for (Tuple coords : availableMoves) {
             x = (int) coords.getFirst();
             y = (int) coords.getSecond();
-            cases[x][y].setStyle("-fx-background-color: " + canMoveSquareColor + ";");
+            color = ((x + y) % 2 == 0) ? squareOneRedColor : squareTwoRedColor;
+            cases[x][y].setStyle("-fx-background-color: " + color + ";");
         }
     }
 

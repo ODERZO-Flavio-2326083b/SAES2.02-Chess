@@ -117,14 +117,14 @@ public class NewGameController {
             }
         };
 
-        BooleanBinding checkBothPlayersImported = new BooleanBinding() {
+        BooleanBinding checkPlayButtonAvailable = new BooleanBinding() {
             {
-                this.bind(playerOneImported, playerTwoImported, playingAgainstBot);
+                this.bind(playerOneImported, playerTwoImported, playingAgainstBot, tournamentRunning);
             }
 
             @Override
             protected boolean computeValue() {
-                return playerOneImported.get() && (playerTwoImported.get() || playingAgainstBot.get() ) && !gameRunning.get();
+                return playerOneImported.get() && (playerTwoImported.get() || playingAgainstBot.get()) && !gameRunning.get() && !tournamentRunning.get();
             }
         };
 
@@ -146,7 +146,7 @@ public class NewGameController {
         importPlayerOneButton.disableProperty().bind(isTextfieldPlyOneAvailable.not());
         importPlayerTwoButton.disableProperty().bind(isTextfieldPlyTwoAvailable.not());
 
-        playButton.disableProperty().bind(checkBothPlayersImported.not());
+        playButton.disableProperty().bind(checkPlayButtonAvailable.not());
     }
 
 
@@ -182,5 +182,9 @@ public class NewGameController {
 
     public GameController getGameController() {
         return gameController;
+    }
+
+    public void setTournamentRunning(boolean tournamentRunning) {
+        this.tournamentRunning.set(tournamentRunning);
     }
 }

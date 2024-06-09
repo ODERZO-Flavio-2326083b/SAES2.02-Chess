@@ -57,6 +57,7 @@ public class TournamentController {
     @FXML
     public void beginTournament() throws Exception {
         tournamentRunning.set(true);
+        newGameController.setTournamentRunning(true);
         allPlayers = new ArrayList<>();
         allMatches = new ArrayList<>();
         nextRoundPlayers = new ArrayList<>();
@@ -91,6 +92,7 @@ public class TournamentController {
             if (allPlayers.size() == 1) {
                 tournamentCurrentMatch.setText("Grand gagnant : " + allPlayers.get(0).getName());
                 tournamentRunning.set(false);
+                newGameController.setTournamentRunning(false);
             } else {
                 nextRound();
             }
