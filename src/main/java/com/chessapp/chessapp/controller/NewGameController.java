@@ -11,6 +11,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import java.io.IOException;
 
+/**
+ * Contrôleur pour la création d'une nouvelle partie.
+ */
 public class NewGameController {
 
     private GameController gameController;
@@ -26,6 +29,10 @@ public class NewGameController {
     @FXML
     private Button importPlayerTwoButton;
     @FXML
+    private Label timeLabel;
+    @FXML
+    private TextField timeTextField;
+    @FXML
     private Label infoLabel;
     @FXML
     private CheckBox botCheckbox;
@@ -36,7 +43,11 @@ public class NewGameController {
     private BooleanProperty playerOneImported;
     private BooleanProperty playerTwoImported;
     private BooleanProperty playingAgainstBot;
+    private int gameTime = 600;
 
+    /**
+     * Initialisation du contrôleur de la nouvelle partie.
+     */
     @FXML
     private void initialize() throws IOException {
         infoLabel.setText("Merci d'importer vos pseudos (3 chars min.)");
@@ -45,19 +56,66 @@ public class NewGameController {
     }
 
     /**
-     * si le bouton de lancement est appuyé, on appelle la fonction dans le GameController
+     * Définit le temps de jeu à partir d'un texte.
+     * @param timeText Le texte représentant le temps (mm:ss).
+     * @return Le temps en secondes.
+     */
+    private int parseTime(String timeText) {
+        try {
+            String[] parts = timeText.split(":");
+            int minutes = Integer.parseInt(parts[0]);
+            int seconds = Integer.parseInt(parts[1]);
+            return minutes * 60 + seconds;
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+            return 600; // Défaut de 10 minutes en cas d'erreur de parsing
+        }
+    }
+
+    /**
+     * Vérifie si le format de temps est valide.
+     * @param timeText Le texte représentant le temps (mm:ss).
+     * @return Vrai si le format est valide, faux sinon.
+     */
+    private boolean isValidTimeFormat(String timeText) {
+        if (timeText == null || !timeText.matches("^\\d{1,2}:\\d{2}$")) {
+            return false;
+        }
+
+        String[] parts = timeText.split(":");
+        int minutes = Integer.parseInt(parts[0]);
+        int seconds = Integer.parseInt(parts[1]);
+
+        return minutes >= 0 && minutes <= 99 && seconds >= 0 && seconds < 60;
+    }
+
+    /**
+     * Méthode appelée lors du clic sur l'image du temps pour le modifier.
+     */
+    @FXML
+    private void onTimeImageClick() {
+        String newTime = timeTextField.getText();
+        if (isValidTimeFormat(newTime) && parseTime(newTime) >= 10) {
+            gameTime = parseTime(newTime);
+            timeLabel.setText(newTime);
+        } else {
+            infoLabel.setText("Format de temps invalide. Utilisez mm:ss avec minimum 10 secondes");
+        }
+    }
+
+    /**
+     * Lance la partie.
+     * @throws Exception en cas d'erreur lors du lancement.
      */
     @FXML
     public void startGame() throws Exception {
 
         gameRunning.set(true);
-        gameController.startGame(playerOneName, playerTwoName, playingAgainstBot.get(), 10);
+        gameController.startGame(playerOneName, playerTwoName, playingAgainstBot.get(), gameTime);
         infoLabel.setText("Partie commencée, bonne chance !");
     }
 
-
     /**
-     * importe le joueur 1 en fonction du nom entré par l'utilisateur
+     * Importe le joueur 1 lorsque le bouton d'importation du joueur 1 est cliqué
      */
     @FXML
     public void importPlayerOne() {
@@ -75,7 +133,7 @@ public class NewGameController {
     }
 
     /**
-     * importe le joueur 2 en fonction du nom entré par l'utilisateur
+     * Importe le joueur 2 lorsque le bouton d'importation du joueur 2 est cliqué
      */
     @FXML
     public void importPlayerTwo() {
@@ -93,7 +151,7 @@ public class NewGameController {
     }
 
     /**
-     * crée les bindings nécessaire au bon fonctionnement de l'application
+     * crée les bindings nécessaire au bon fonctionnement de l'ihm
      */
     public void createBindings(){
 
@@ -134,7 +192,6 @@ public class NewGameController {
             }
         };
 
-
         BooleanBinding checkBotCheckbox = new BooleanBinding() {
             {
                 this.bind(botCheckbox.selectedProperty());
@@ -170,7 +227,6 @@ public class NewGameController {
         if (!playingAgainstBot.get()) {
             if (winner == 1) {
                 PlayerHandler.finPartie(playerOneName, playerTwoName);
-
             } else {
                 PlayerHandler.finPartie(playerTwoName, playerOneName);
             }
