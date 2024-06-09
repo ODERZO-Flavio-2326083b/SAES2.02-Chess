@@ -3,6 +3,8 @@ package com.chessapp.chessapp.model;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HistoriqueHandler {
     /**
@@ -34,7 +36,7 @@ public class HistoriqueHandler {
     }
 
     /**
-     * Methode qui va creer le nom du fichier sous la forme psuedo1-pseudo2-dd-MM-yyyy_HH-mm.csv
+     * Methode qui va creer le nom du fichier sous la forme psuedo1-pseudo2-dd-MM-yyyy_HH-  mm.csv
      * @param pseudo1
      * @param pseudo2
      * @return String
@@ -77,6 +79,24 @@ public class HistoriqueHandler {
             e.printStackTrace();
             throw new IOException("Problème durant la lecture du fichier", e);
         }
+    }
+
+
+    public static List<String> obtenirHistoriques() {
+        String directoryPath = "Data/Historique";
+        File directory = new File(directoryPath);
+        List<String> historiques = new ArrayList<>();
+
+        if (directory.exists() && directory.isDirectory()) {
+            File[] files = directory.listFiles((dir, name) -> name.endsWith(".csv"));
+            if (files != null) {
+                for (File file : files) {
+                    historiques.add(file.getName());
+                }
+            }
+        }
+
+        return historiques;
     }
 
 

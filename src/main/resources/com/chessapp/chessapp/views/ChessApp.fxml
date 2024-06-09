@@ -30,12 +30,12 @@
                 </Tab>
                 <Tab text="JOUEURS">
                      <content>
-                         <fx:include fx:id="historyTab" source="PlayerTable.fxml" />
+                         <fx:include fx:id="playerTab" source="PlayerTable.fxml" />
                      </content>
                 </Tab>
                   <Tab text="PARTIES">
                      <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                         <fx:include fx:id="historyTab" source="HistoryTab.fxml" />
                      </content>
                   </Tab>
                   <Tab text="TOURNOI">

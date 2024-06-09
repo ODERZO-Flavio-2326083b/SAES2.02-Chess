@@ -9,11 +9,11 @@
     <children>
         <VBox>
             <children>
-                <TableView fx:id="historyTable" prefHeight="600.0" prefWidth="350.0">
+                <TableView fx:id="tableViewHistory" prefHeight="600.0" prefWidth="350.0">
                     <columns>
-                        <TableColumn fx:id="pseudo1Column" prefWidth="149.59997254610062" text="Nom du joueur 1" />
-                        <TableColumn fx:id="pseudo2Column" minWidth="0.0" prefWidth="120.00001525878906" text="Nom du joueur 2" />
-                        <TableColumn fx:id="dateColumn" prefWidth="75.0" text="Date" />
+                        <TableColumn fx:id="pseudo1Column" prefWidth="116.66666666666667" text="Gagnant" />
+                        <TableColumn fx:id="pseudo2Column" prefWidth="116.66666666666667" text="Perdant" />
+                        <TableColumn fx:id="dateColumn" prefWidth="116.66666666666667" text="Date" />
                     </columns>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

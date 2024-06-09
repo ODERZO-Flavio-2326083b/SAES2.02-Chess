@@ -1,21 +1,19 @@
 package com.chessapp.chessapp.controller;
 
-import com.chessapp.chessapp.model.HistoryEntry;
+import com.chessapp.chessapp.model.HistoriqueHandler;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.io.File;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.List;
 
 public class HistoryTabController {
 
     @FXML
-    private TableView<HistoryEntry> historyTable;
+    private TableView<HistoryEntry> tableViewHistory;
 
     @FXML
     private TableColumn<HistoryEntry, String> pseudo1Column;
@@ -26,34 +24,56 @@ public class HistoryTabController {
     @FXML
     private TableColumn<HistoryEntry, String> dateColumn;
 
-    private final ObservableList<HistoryEntry> historyData = FXCollections.observableArrayList();
-
     @FXML
-    public void initialize() {
-        pseudo1Column.setCellValueFactory(new PropertyValueFactory<>("pseudo1"));
-        pseudo2Column.setCellValueFactory(new PropertyValueFactory<>("pseudo2"));
-        dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
-
-        loadHistoryData();
-        historyTable.setItems(historyData);
+    private void initialize() {
+        setupTable();
+        loadHistories();
     }
 
-    private void loadHistoryData() {
-        File directory = new File("Data/Historique");
-        File[] files = directory.listFiles((dir, name) -> name.endsWith(".csv"));
+    private void setupTable() {
+        pseudo1Column.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPseudo1()));
+        pseudo2Column.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPseudo2()));
+        dateColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDate()));
+    }
 
-        if (files != null) {
-            Pattern pattern = Pattern.compile("^(.*)-(.*)-(\\d{2}-\\d{2}-\\d{4}_\\d{2}-\\d{2})\\.csv$");
-            for (File file : files) {
-                Matcher matcher = pattern.matcher(file.getName());
-                if (matcher.matches()) {
-                    String pseudo1 = matcher.group(1);
-                    String pseudo2 = matcher.group(2);
-                    String date = matcher.group(3).replace("-", ":");  // Replace "-" with ":" for proper time format
+    private void loadHistories() {
+        List<String> historyFiles = HistoriqueHandler.obtenirHistoriques();
+        ObservableList<HistoryEntry> historyEntries = FXCollections.observableArrayList();
 
-                    historyData.add(new HistoryEntry(pseudo1, pseudo2, date));
-                }
+        for (String file : historyFiles) {
+            String[] parts = file.replace(".csv", "").split("-");
+            if (parts.length >= 3) {
+                String pseudo1 = parts[0];
+                String pseudo2 = parts[1];
+                String date = parts[2] + "/" + parts[3] + "/" + parts[4];
+                historyEntries.add(new HistoryEntry(pseudo1, pseudo2, date));
             }
+        }
+
+        tableViewHistory.setItems(historyEntries);
+    }
+
+    public static class HistoryEntry {
+        private final String pseudo1;
+        private final String pseudo2;
+        private final String date;
+
+        public HistoryEntry(String pseudo1, String pseudo2, String date) {
+            this.pseudo1 = pseudo1;
+            this.pseudo2 = pseudo2;
+            this.date = date;
+        }
+
+        public String getPseudo1() {
+            return pseudo1;
+        }
+
+        public String getPseudo2() {
+            return pseudo2;
+        }
+
+        public String getDate() {
+            return date;
         }
     }
 }
