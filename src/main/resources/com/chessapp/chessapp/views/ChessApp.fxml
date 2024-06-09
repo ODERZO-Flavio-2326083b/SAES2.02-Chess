@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chessapp.chessapp.controller.GameController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/20" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chessapp.chessapp.controller.GameController">
    <right>
       <VBox prefHeight="200.0" prefWidth="350.0" BorderPane.alignment="CENTER">
          <children>
@@ -30,12 +30,12 @@
                 </Tab>
                 <Tab text="JOUEURS">
                      <content>
-                         <fx:include fx:id="historyTab" source="PlayerTable.fxml" />
+                         <fx:include fx:id="playerTab" source="PlayerTable.fxml" />
                      </content>
                 </Tab>
                   <Tab text="PARTIES">
                      <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                         <fx:include fx:id="historyTab" source="HistoryTab.fxml" />
                      </content>
                   </Tab>
                   <Tab text="TOURNOI">

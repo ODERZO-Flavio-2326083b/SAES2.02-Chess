@@ -60,8 +60,8 @@ public class GameController {
     private King whiteKing;
     private King blackKing;
 
-    private IntegerProperty timeLeftPlyOne;
-    private IntegerProperty timeLeftPlyTwo;
+    private int timeLeftPlyOne;
+    private int timeLeftPlyTwo;
 
 
     /**
@@ -143,8 +143,8 @@ public class GameController {
         gameRunning = true;
         tournamentGame = false;
 
-        timeLeftPlyOne = new SimpleIntegerProperty(timePerTurn * 60);
-        timeLeftPlyTwo = new SimpleIntegerProperty(timePerTurn * 60); ;
+        timeLeftPlyOne = timePerTurn * 60;
+        timeLeftPlyTwo = timePerTurn * 60;
     }
 
     public void startTournamentGame(String playerOneName, String playerTwoName, int timePerTurn) throws Exception {
@@ -156,8 +156,8 @@ public class GameController {
         gameRunning = true;
         tournamentGame = true;
 
-        timeLeftPlyOne = new SimpleIntegerProperty(timePerTurn * 60);
-        timeLeftPlyTwo = new SimpleIntegerProperty(timePerTurn * 60);
+        timeLeftPlyOne = timePerTurn * 60;
+        timeLeftPlyTwo = timePerTurn * 60;
     }
 
     /**
