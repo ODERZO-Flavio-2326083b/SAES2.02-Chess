@@ -39,7 +39,7 @@
                   <Insets bottom="20.0" />
                </padding>
             </HBox>
-            <VBox alignment="CENTER" spacing="5.0" style="-fx-background-color: #262522;">
+             <VBox alignment="CENTER" spacing="5.0" style="-fx-background-color: #21201d;">
                <children>
                   <HBox maxWidth="245.0" prefWidth="250.0" spacing="100.0">
                      <children>

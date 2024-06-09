@@ -1,6 +1,7 @@
 module com.chessapp.chessapp {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.sql;
 
 
     opens com.chessapp.chessapp to javafx.fxml;

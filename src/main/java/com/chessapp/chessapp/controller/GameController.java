@@ -12,6 +12,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +64,8 @@ public class GameController {
     private Timeline timerPlyTwo;
     private int timePerTurnPlyOne, timeLeftPlyOne;
     private int timePerTurnPlyTwo, timeLeftPlyTwo;
+    private String matchFileName;
+
 
 
     /**
@@ -133,10 +136,10 @@ public class GameController {
      * initialise les timers des deux joueurs
      */
     public void initTimers() {
-        labelTimerPlyOne.setText(secondsToTimeFormat(timePerTurnPlyOne));
-        labelTimerPlyTwo.setText(secondsToTimeFormat(timePerTurnPlyTwo));
         timeLeftPlyOne = timePerTurnPlyOne;
         timeLeftPlyTwo = timePerTurnPlyTwo;
+        labelTimerPlyOne.setText(secondsToTimeFormat(timePerTurnPlyOne));
+        labelTimerPlyTwo.setText(secondsToTimeFormat(timePerTurnPlyTwo));
 
         timerPlyOne = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
                     if (timeLeftPlyOne > 0) --timeLeftPlyOne;
@@ -170,6 +173,7 @@ public class GameController {
 
         timerPlyTwo.setCycleCount(Timeline.INDEFINITE);
 
+        timerPlyOne.play();
 
     }
 
@@ -198,11 +202,14 @@ public class GameController {
         labelPlayerTwo.setText(playerTwoName);
         gameRunning = true;
         tournamentGame = false;
+        matchFileName = HistoriqueHandler.createName(playerOneName, playerTwoName);
 
-        timeLeftPlyOne = timePerTurn;
-        timeLeftPlyTwo = timePerTurn;
+        timePerTurnPlyOne = timePerTurn;
+        timePerTurnPlyTwo = timePerTurn;
+        System.out.println(timeLeftPlyOne + " " + timeLeftPlyTwo);
         initBoard();
         initTimers();
+        System.out.println(timeLeftPlyOne + " " + timeLeftPlyTwo);
     }
 
     /**
@@ -325,6 +332,7 @@ public class GameController {
 
                 try {
                     plateau.movement(sourceX, sourceY, destX, destY);
+                    HistoriqueHandler.ecritureHistorique(matchFileName, new Tuple(sourceX, sourceY), new Tuple(destX, destY));
                     // plateau.showGrid();
                 } catch (Exception ex) {
                     throw new RuntimeException(ex);
@@ -436,30 +444,46 @@ public class GameController {
      */
     public void playRandomMove() throws IOException {
         Random rand = new Random();
-        Piece toMovePiece = blackPieces.get(rand.nextInt(blackPieces.size())); // pièce aléatoire
+        Piece toMovePiece;
+        Piece enemyKing;
+        // pièce aléatoire
+        if (currentTurnColor == -1) {
+            toMovePiece = blackPieces.get(rand.nextInt(blackPieces.size()));
+            enemyKing = whiteKing;
+        } else {
+            toMovePiece = whitePieces.get(rand.nextInt(whitePieces.size()));
+            enemyKing = blackKing;
+        }
 
-        while (!toMovePiece.canPieceMove(plateau)) {
-            toMovePiece = blackPieces.get(rand.nextInt(blackPieces.size())); // si la pièce est coincée, on choisit un autre
+        while (!toMovePiece.canPieceMove(plateau)) { // si la pièce est coincée, on choisit un autre
+            if (currentTurnColor == -1)
+                toMovePiece = blackPieces.get(rand.nextInt(blackPieces.size()));
+            else
+                toMovePiece = whitePieces.get(rand.nextInt(whitePieces.size()));
+
         }
 
         // on récupère le code de mouvement utilisé par les joueurs
-        List<Tuple> botMoves = toMovePiece.calculateMovements(plateau);
-        Tuple destCoords = botMoves.get(rand.nextInt(botMoves.size()));
-        int botX = (int) destCoords.getFirst();
-        int botY = (int) destCoords.getSecond();
+        List<Tuple> allMoves = toMovePiece.calculateMovements(plateau);
+        Tuple destCoords = allMoves.get(rand.nextInt(allMoves.size()));
+        int randX = (int) destCoords.getFirst();
+        int randY = (int) destCoords.getSecond();
 
-        cases[botX][botY].getChildren().setAll(toMovePiece); // mouvement de la pièce visuellement
+        cases[randX][randY].getChildren().setAll(toMovePiece); // mouvement de la pièce visuellement
 
-        if(plateau.getPiece(botX, botY) != null) {
-            if (plateau.getPiece(botX, botY).equals(whiteKing)) {
-                endGame(-1);
+        if(plateau.getPiece(randX, randY) != null) {
+            if (plateau.getPiece(randX, randY).equals(enemyKing)) {
+                endGame(currentTurnColor);
             } else {
-                whitePieces.remove(plateau.getPiece(botX, botY));
+                if (currentTurnColor == -1)
+                    whitePieces.remove(plateau.getPiece(randX, randY));
+                else blackPieces.remove(plateau.getPiece(randX, randY));
             }
         }
 
         try {
-            plateau.movement(toMovePiece.getxTab(), toMovePiece.getyTab(), botX, botY);
+            plateau.movement(toMovePiece.getxTab(), toMovePiece.getyTab(), randX, randY);
+            HistoriqueHandler.ecritureHistorique(matchFileName, new Tuple(toMovePiece.getxTab(), toMovePiece.getyTab()), destCoords);
             // plateau.showGrid();
         } catch (Exception ex) {
             throw new RuntimeException(ex);
@@ -485,6 +509,15 @@ public class GameController {
         } else {
             newGameController.gameEnded(winner);
             gameRunning = false;
+        }
+
+        // on renomme le fichier avec gagnant en premier, perdant en second.
+        String endMatchFileName = matchFileName.replace(labelPlayerOne.getText()+ "-" + labelPlayerTwo.getText()+ "-", "");
+        File matchFile = new File("Data/Historique/" + matchFileName);
+        if (winner == -1) {
+            matchFile.renameTo(new File("Data/Historique/" + labelPlayerTwo.getText()+ "-" + labelPlayerOne.getText()+ "-" + endMatchFileName));
+        } else {
+            matchFile.renameTo(new File("Data/Historique/" + labelPlayerOne.getText()+ "-" + labelPlayerTwo.getText()+ "-" + endMatchFileName));
         }
     }
 
