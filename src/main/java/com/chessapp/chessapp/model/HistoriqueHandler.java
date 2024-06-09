@@ -45,7 +45,7 @@ public class HistoriqueHandler {
      */
     public static String createName(String pseudo1, String pseudo2) {
         LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy_HH-mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy-HH-mm");
         String formattedDate = now.format(formatter);
 
         return pseudo1 + "-" + pseudo2 + "-" + formattedDate + ".csv";

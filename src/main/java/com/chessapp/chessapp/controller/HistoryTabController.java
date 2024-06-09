@@ -54,7 +54,7 @@ public class HistoryTabController {
             if (parts.length >= 3) {
                 String pseudo1 = parts[0];
                 String pseudo2 = parts[1];
-                String date = parts[2] + "/" + parts[3] + "/" + parts[4];
+                String date = parts[2] + "/" + parts[3] + "/" + parts[4] + "/" + parts[5] + "h" + parts[6];
                 historyEntries.add(new HistoryEntry(pseudo1, pseudo2, date));
             }
         }

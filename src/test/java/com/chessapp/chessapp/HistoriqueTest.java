@@ -32,9 +32,4 @@ public class HistoriqueTest {
         assertEquals("Player1-Player2-" + formattedDate + ".csv", fileName);
     }
 
-    @Test
-    @DisplayName("Écriture de mouvements dans le fichier")
-    public void test2(){
-
-    }
 }
