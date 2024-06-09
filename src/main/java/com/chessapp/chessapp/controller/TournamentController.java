@@ -37,13 +37,16 @@ public class TournamentController {
 
     @FXML
     private void initialize() {
-        tournamentInfoLabel.setText("Merci de rentrer tous les joueurs du tournoi au dessus, séparés par des virgules.");
+        tournamentInfoLabel.setText("Merci de taper tous les noms de joueurs participants au dessus, séparés par des virgules.");
         tournamentCurrentMatch.setText("");
         tournamentCurrentRound.setText("");
         tournamentRunning = new SimpleBooleanProperty(false);
         createBindings();
     }
 
+    /**
+     * crée les bindings pour le bon fonctionnement de l'ihm
+     */
     private void createBindings() {
         tournamentStartButton.disableProperty().bind(tournamentRunning);
         tournamentPlayersTextField.editableProperty().bind(tournamentRunning.not());
@@ -150,6 +153,9 @@ public class TournamentController {
         playCurrentMatch();
     }
 
+    /**
+     * joue le prochain tour, en changeant l'affichage et en regénérant les matchs
+     */
     public void nextRound() {
         ++roundNumber;
         tournamentCurrentRound.setText("ROUND " + roundNumber);

@@ -131,8 +131,8 @@ public class GameController {
 
     /**
      * Fonction appellée quand le bouton de lancement est cliqué
-     * @param playerOneName Nom du joueur 1
-     * @param playerTwoName Nom du joueur 2
+     * @param playerOneName Nom du joueur blanc
+     * @param playerTwoName Nom du joueur noir
      */
     public void startGame(String playerOneName, String playerTwoName, boolean playingAgainstBot, int timePerTurn) throws Exception {
         initBoard();
@@ -147,6 +147,12 @@ public class GameController {
         timeLeftPlyTwo = timePerTurn * 60;
     }
 
+    /**
+     * Fonction appellée lors du début d'ne partie d'un tournoi
+     * @param playerOneName Nom du joueur blanc
+     * @param playerTwoName Nom du joueur noir
+     * @param timePerTurn temps en minutes par tour
+     */
     public void startTournamentGame(String playerOneName, String playerTwoName, int timePerTurn) throws Exception {
         initBoard();
 
@@ -346,6 +352,12 @@ public class GameController {
         }
     }
 
+    /**
+     * Renvoie une liste des mouvements que la pièce peut faire sans être en danger
+     * @param availableMoves liste de tous les mouvements possibles
+     * @param enemyTeam liste des pièces ennemies
+     * @return liste des mouvements sans menaces
+     */
     public List<Tuple> filterSuicideMoves(List<Tuple> availableMoves, List<Piece> enemyTeam) {
         List<Tuple> threatenedPositions = new ArrayList<>();
 
@@ -395,11 +407,11 @@ public class GameController {
             throw new RuntimeException(ex);
         }
 
-        currentTurnColor = 1;
+        currentTurnColor = currentTurnColor * -1;
     }
 
     /**
-     * termine la partie en cours, généralement quand elle est gagnée par un des deux joueurs
+     * termine la partie en cours, quand l'un des deux rois est capturé
      * @param winner couleur du gagnant
      */
     public void endGame(int winner) throws IOException {

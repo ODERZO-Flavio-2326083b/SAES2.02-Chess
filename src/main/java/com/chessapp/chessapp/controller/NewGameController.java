@@ -56,6 +56,9 @@ public class NewGameController {
     }
 
 
+    /**
+     * importe le joueur 1 en fonction du nom entré par l'utilisateur
+     */
     @FXML
     public void importPlayerOne() {
         playerOneName = textFieldPlayerOne.getText();
@@ -71,6 +74,9 @@ public class NewGameController {
         playerOneImported.set(true);
     }
 
+    /**
+     * importe le joueur 2 en fonction du nom entré par l'utilisateur
+     */
     @FXML
     public void importPlayerTwo() {
         playerTwoName = textFieldPlayerTwo.getText();
@@ -184,6 +190,10 @@ public class NewGameController {
         return gameController;
     }
 
+    /**
+     * importe le controlleur de tournois, nécessaire pour bloquer le bouton jouer pendant le déroulé d'un tournoi
+     * @param tournamentRunning
+     */
     public void setTournamentRunning(boolean tournamentRunning) {
         this.tournamentRunning.set(tournamentRunning);
     }

@@ -2,7 +2,7 @@ package com.chessapp.chessapp.model;
 
 
 /**
- * Classe match utilisée pour la gestion des tournois
+ * Classe simple utilisée pour la gestion des tournois, garde en mémoire le duel
  */
 public class Match {
     private Player plyOne;
