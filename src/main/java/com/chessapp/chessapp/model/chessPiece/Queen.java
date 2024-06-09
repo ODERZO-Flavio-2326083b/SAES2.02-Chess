@@ -7,6 +7,9 @@ import javafx.scene.image.Image;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Classe qui représente la reine aux échecs
+ */
 public class Queen extends Piece {
 
     public static Image queen_w = new Image("file:src/main/resources/com/chessapp/chessapp/img/queen_w.png");

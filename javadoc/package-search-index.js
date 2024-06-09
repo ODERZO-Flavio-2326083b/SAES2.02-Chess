@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"m":"com.chessapp.chessapp","l":"com.chessapp.chessapp"},{"m":"com.chessapp.chessapp","l":"com.chessapp.chessapp.controller"},{"m":"com.chessapp.chessapp","l":"com.chessapp.chessapp.model"},{"m":"com.chessapp.chessapp","l":"com.chessapp.chessapp.model.chessPiece"}];updateSearchResults();

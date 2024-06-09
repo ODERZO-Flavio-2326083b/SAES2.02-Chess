@@ -7,6 +7,9 @@ import javafx.scene.image.Image;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Classe représentant le roi
+ */
 public class King extends Piece {
 
     public static Image king_w = new Image("file:src/main/resources/com/chessapp/chessapp/img/king_w.png");

@@ -2,14 +2,15 @@ package com.chessapp.chessapp.controller;
 
 import com.chessapp.chessapp.model.*;
 import com.chessapp.chessapp.model.chessPiece.*;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,7 +19,6 @@ import java.util.Random;
 
 /**
  * Controlleur principal du jeu, gère la boucle du jeu, l'initialisation de la grille, ...
- *`
  */
 public class GameController {
 
@@ -26,7 +26,6 @@ public class GameController {
     private static final String squareTwoColor = "#739552";
     private static final String squareOneRedColor = "#EB7D6A";
     private static final String squareTwoRedColor = "#D36C50";
-    private static final String canMoveSquareColor = "#EB7D6A";
     private static final String clickedSquareColor = "#F5F682";
 
     @FXML
@@ -60,8 +59,10 @@ public class GameController {
     private King whiteKing;
     private King blackKing;
 
-    private int timeLeftPlyOne;
-    private int timeLeftPlyTwo;
+    private Timeline timerPlyOne;
+    private Timeline timerPlyTwo;
+    private int timePerTurnPlyOne, timeLeftPlyOne;
+    private int timePerTurnPlyTwo, timeLeftPlyTwo;
 
 
     /**
@@ -83,7 +84,6 @@ public class GameController {
 
     /**
      * initialise l'échiéquier pour le jeu
-     * @throws Exception
      */
     public void initBoard() throws Exception {
         cases = new StackPane[8][8];
@@ -130,21 +130,79 @@ public class GameController {
     }
 
     /**
+     * initialise les timers des deux joueurs
+     */
+    public void initTimers() {
+        labelTimerPlyOne.setText(secondsToTimeFormat(timePerTurnPlyOne));
+        labelTimerPlyTwo.setText(secondsToTimeFormat(timePerTurnPlyTwo));
+        timeLeftPlyOne = timePerTurnPlyOne;
+        timeLeftPlyTwo = timePerTurnPlyTwo;
+
+        timerPlyOne = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+                    if (timeLeftPlyOne > 0) --timeLeftPlyOne;
+                    labelTimerPlyOne.setText(secondsToTimeFormat(timeLeftPlyOne));
+                    if (timeLeftPlyOne <= 0) {
+                        try {
+                            playRandomMove();
+                            timeLeftPlyOne = timePerTurnPlyOne;
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
+                })
+        );
+
+        timerPlyOne.setCycleCount(Timeline.INDEFINITE);
+
+        timerPlyTwo = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            if (timeLeftPlyTwo > 0) --timeLeftPlyTwo;
+            labelTimerPlyTwo.setText(secondsToTimeFormat(timeLeftPlyTwo));
+            if (timeLeftPlyTwo <= 0) {
+                try {
+                    playRandomMove();
+                    timeLeftPlyTwo = timePerTurnPlyTwo;
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        })
+        );
+
+        timerPlyTwo.setCycleCount(Timeline.INDEFINITE);
+
+
+    }
+
+    /**
+     * transforme un nombre de seconde en string de la forme
+     * mm:ss
+     * @param seconds temps en secondes
+     * @return le string formaté
+     */
+    public String secondsToTimeFormat(int seconds) {
+        int minutes = seconds / 60;
+        int second = seconds % 60;
+        return String.format("%02d:%02d", minutes, second);
+    }
+
+    /**
      * Fonction appellée quand le bouton de lancement est cliqué
      * @param playerOneName Nom du joueur blanc
      * @param playerTwoName Nom du joueur noir
+     * @param playingAgainstBot si le joueur décide de jouer contre un bot ou pas
+     * @param timePerTurn temps en secondes par tour
      */
     public void startGame(String playerOneName, String playerTwoName, boolean playingAgainstBot, int timePerTurn) throws Exception {
-        initBoard();
-
         this.playingAgainstBot = playingAgainstBot;
         labelPlayerOne.setText(playerOneName);
         labelPlayerTwo.setText(playerTwoName);
         gameRunning = true;
         tournamentGame = false;
 
-        timeLeftPlyOne = timePerTurn * 60;
-        timeLeftPlyTwo = timePerTurn * 60;
+        timeLeftPlyOne = timePerTurn;
+        timeLeftPlyTwo = timePerTurn;
+        initBoard();
+        initTimers();
     }
 
     /**
@@ -154,16 +212,16 @@ public class GameController {
      * @param timePerTurn temps en minutes par tour
      */
     public void startTournamentGame(String playerOneName, String playerTwoName, int timePerTurn) throws Exception {
-        initBoard();
-
         this.playingAgainstBot = false;
         labelPlayerOne.setText(playerOneName);
         labelPlayerTwo.setText(playerTwoName);
         gameRunning = true;
         tournamentGame = true;
 
-        timeLeftPlyOne = timePerTurn * 60;
-        timeLeftPlyTwo = timePerTurn * 60;
+        timePerTurnPlyOne = timePerTurn;
+        timePerTurnPlyTwo = timePerTurn;
+        initBoard();
+        initTimers();
     }
 
     /**
@@ -279,9 +337,9 @@ public class GameController {
                     } else enemyTeam.remove(targetedPiece);
                 }
 
-                currentTurnColor = currentTurnColor * -1;
+                switchTurn();
                 if (playingAgainstBot && gameRunning) {
-                    playBotMove();
+                    playRandomMove();
                 }
             }
 
@@ -374,9 +432,9 @@ public class GameController {
 
 
     /**
-     * Joue le mouvement de l'IA si l'option est choisie en début de partie
+     * Joue le mouvement de l'IA si l'option est choisie en début de partie, ou lorsque le temps du joueur est écoulé
      */
-    public void playBotMove() throws IOException {
+    public void playRandomMove() throws IOException {
         Random rand = new Random();
         Piece toMovePiece = blackPieces.get(rand.nextInt(blackPieces.size())); // pièce aléatoire
 
@@ -407,7 +465,7 @@ public class GameController {
             throw new RuntimeException(ex);
         }
 
-        currentTurnColor = currentTurnColor * -1;
+        switchTurn();
     }
 
     /**
@@ -427,6 +485,21 @@ public class GameController {
         } else {
             newGameController.gameEnded(winner);
             gameRunning = false;
+        }
+    }
+
+    /**
+     * change le tour actuel, et permet de lancer un timer et de stopper l'autre
+     */
+    public void switchTurn() {
+        currentTurnColor = currentTurnColor * -1;
+
+        if (currentTurnColor == 1) {
+            timerPlyOne.play();
+            timerPlyTwo.stop();
+        } else {
+            timerPlyTwo.play();
+            timerPlyOne.stop();
         }
     }
 

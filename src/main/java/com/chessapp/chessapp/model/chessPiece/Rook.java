@@ -7,6 +7,9 @@ import javafx.scene.image.Image;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Classe qui représente la tour aux échecs
+ */
 public class Rook extends Piece {
 
     public static Image rook_w = new Image("file:src/main/resources/com/chessapp/chessapp/img/rook_w.png");

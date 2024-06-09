@@ -63,6 +63,10 @@ ids personnalisés
     -fx-text-fill: white;
 }
 
+#gameTimer {
+    -fx-font-weight: 800;
+}
+
 #vboxDetailedStats {
     -fx-text-fill: white;
     -fx-background-color: #21201D;

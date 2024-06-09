@@ -15,7 +15,7 @@ public class Player {
 
     public Player(String name) throws Exception {
         this.name = name;
-        if (name == "SKIP") { // si jamais c'est un joueur juste pour remplir une case d'un nombre de joueurs impairs dans un tournoi
+        if (name == "SKIP") { // si jamais c'est un faux-joueur juste pour remplir une case d'un nombre de joueurs impairs dans un tournoi
             return;
         }
         String[] stats = PlayerHandler.lireStats(name);

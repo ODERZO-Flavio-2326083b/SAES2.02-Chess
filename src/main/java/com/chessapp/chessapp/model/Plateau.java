@@ -37,6 +37,12 @@ public class Plateau {
 
     }
 
+    /**
+     * récupère la pièce aux coordonnées x y
+     * @param x x
+     * @param y y
+     * @return pièce en (x,y)
+     */
     public Piece getPiece(int x, int y){
         return plateau[y][x];
     }
@@ -95,6 +101,9 @@ public class Plateau {
         return plateau;
     }
 
+    /**
+     * vide le plateau de toutes les pièces
+     */
     public void clearPlateau() {
         this.plateau = new Piece[8][8];
     }

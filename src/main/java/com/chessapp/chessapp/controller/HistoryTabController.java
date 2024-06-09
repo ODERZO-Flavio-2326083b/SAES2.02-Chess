@@ -10,6 +10,9 @@ import javafx.scene.control.TableView;
 
 import java.util.List;
 
+/**
+ * Controleur chargé de l'affichage de l'historique des parties.
+ */
 public class HistoryTabController {
 
     @FXML
@@ -30,12 +33,18 @@ public class HistoryTabController {
         loadHistories();
     }
 
+    /**
+     * initialise les colonnes de la tableView
+     */
     private void setupTable() {
-        pseudo1Column.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPseudo1()));
-        pseudo2Column.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPseudo2()));
-        dateColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDate()));
+        pseudo1Column.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().pseudo1()));
+        pseudo2Column.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().pseudo2()));
+        dateColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().date()));
     }
 
+    /**
+     * charge les parties du dossier Data/Historique et les place dans le TableView
+     */
     private void loadHistories() {
         List<String> historyFiles = HistoriqueHandler.obtenirHistoriques();
         ObservableList<HistoryEntry> historyEntries = FXCollections.observableArrayList();
@@ -53,27 +62,12 @@ public class HistoryTabController {
         tableViewHistory.setItems(historyEntries);
     }
 
-    public static class HistoryEntry {
-        private final String pseudo1;
-        private final String pseudo2;
-        private final String date;
-
-        public HistoryEntry(String pseudo1, String pseudo2, String date) {
-            this.pseudo1 = pseudo1;
-            this.pseudo2 = pseudo2;
-            this.date = date;
-        }
-
-        public String getPseudo1() {
-            return pseudo1;
-        }
-
-        public String getPseudo2() {
-            return pseudo2;
-        }
-
-        public String getDate() {
-            return date;
-        }
+    /**
+     * Classe simple utilisée pour l'implémentation des données des parties dans l'historique
+     * @param pseudo1 pseudo du gagnant
+     * @param pseudo2 pseudo du perdant
+     * @param date date de la partie
+     */
+    public record HistoryEntry(String pseudo1, String pseudo2, String date) {
     }
 }

@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * Classe chargée de la lecture et écriture des fichiers utilisateurs
+ */
 public class PlayerHandler {
 
     static String directoryPath = "Data/Players";

@@ -6,14 +6,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Classe gérant l'écriture et la lecture de fichiers de parties précédentes.
+ */
 public class HistoriqueHandler {
     /**
      * Methode qui prend en paramtre 2 coordonnes et qui va creer ou modifier un fichier csv
      * en ajoutant a chaque lignes le x et y des 2 coordonnes
-     * @param fileName
-     * @param sourceCoords
-     * @param destCoords
-     * @throws IOException
+     * @param fileName nom exact du fichier
+     * @param sourceCoords coordonnées de départ
+     * @param destCoords coordonnées de fin
      */
     public static void ecritureHistorique(String fileName, Tuple sourceCoords, Tuple destCoords) throws IOException {
         String directoryPath = "Data/Historique";
@@ -37,8 +39,8 @@ public class HistoriqueHandler {
 
     /**
      * Methode qui va creer le nom du fichier sous la forme psuedo1-pseudo2-dd-MM-yyyy_HH-  mm.csv
-     * @param pseudo1
-     * @param pseudo2
+     * @param pseudo1 joueur blanc
+     * @param pseudo2 joueur noir
      * @return String
      */
     public static String createName(String pseudo1, String pseudo2) {
@@ -52,8 +54,7 @@ public class HistoriqueHandler {
 
     /**
      * Methode qui va prendre en parametre le nom d'un fichier et va lire ligne par ligne
-     * @param file
-     * @throws IOException
+     * @param file nom du fichier
      */
     public static void lectureHistorique(String file) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -82,6 +83,10 @@ public class HistoriqueHandler {
     }
 
 
+    /**
+     * Méthode renvoyant le nom de chaque fichier de partie précédente
+     * @return Liste de tous les noms de fichiers
+     */
     public static List<String> obtenirHistoriques() {
         String directoryPath = "Data/Historique";
         File directory = new File(directoryPath);

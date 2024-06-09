@@ -13,6 +13,9 @@ import javafx.scene.control.TextField;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controleur des tournois, gère leur initialisation et leur déroulé
+ */
 public class TournamentController {
 
     @FXML
@@ -108,7 +111,7 @@ public class TournamentController {
                 matchEnded(1);
             else {
                 try {
-                    gameController.startTournamentGame(currentMatch.getPlyOne().getName(), currentMatch.getPlyTwo().getName(), 10);
+                    gameController.startTournamentGame(currentMatch.getPlyOne().getName(), currentMatch.getPlyTwo().getName(), 60);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
